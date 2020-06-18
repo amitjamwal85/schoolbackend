@@ -87,4 +87,4 @@ def setup_user(sender, instance, created, **kwargs):
                                    last_name=instance.last_name,
                                    email=instance.email)
 
-
+            
