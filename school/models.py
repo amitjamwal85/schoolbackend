@@ -76,15 +76,16 @@ class Student(models.Model):
 @receiver(post_save, sender=settings.AUTH_USER_MODEL)
 def setup_user(sender, instance, created, **kwargs):
     if created:
-        if instance.first_name == 'student':
+        if instance.user_type == 'student':
             Student.objects.create(user=instance,
                                    first_name=instance.first_name,
                                    last_name=instance.last_name,
-                                   email= instance.email)
+                                   email= instance.email,
+                                   )
         else:
             Teacher.objects.create(user=instance,
                                    first_name=instance.first_name,
                                    last_name=instance.last_name,
-                                   email=instance.email)
+                                   email=instance.email,
+                                   )
 
-            

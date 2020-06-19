@@ -1,17 +1,15 @@
+from django.contrib.auth import get_user_model
+from rest_framework import status
 from rest_framework import viewsets
 from rest_framework.pagination import PageNumberPagination
 from rest_framework.permissions import IsAuthenticated, AllowAny
-from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.viewsets import GenericViewSet
 from rest_framework_simplejwt.tokens import RefreshToken
+from six import text_type
+
 from school.models import School, Student, Teacher
 from school.serializers import PostSerializer, RegistrationSerializer, StudentSerializer, TeacherSerializer
-from six import text_type
-from rest_framework import status
-from rest_framework.schemas import ManualSchema
-import coreschema, coreapi
-from django.contrib.auth import get_user_model
 
 User = get_user_model()
 
@@ -33,6 +31,13 @@ class StudentView(viewsets.ModelViewSet):
     queryset = Student.objects.all()
     lookup_field = "pk"
 
+    def create(self, request, *args, **kwargs):
+        data = request.data
+        serializer = StudentSerializer(data=data)
+        if serializer.is_valid(raise_exception=True):
+            validated_data = serializer.validated_data
+            student = serializer.create(validated_data)
+            return Response( {"status":student}, status=status.HTTP_201_CREATED )
 
 
 class TeacherView(viewsets.ModelViewSet):
@@ -41,10 +46,18 @@ class TeacherView(viewsets.ModelViewSet):
     queryset = Teacher.objects.all()
     lookup_field = "pk"
 
+    def create(self, request, *args, **kwargs):
+        data = request.data
+        serializer = TeacherSerializer(data=data)
+        if serializer.is_valid(raise_exception=True):
+            validated_data = serializer.validated_data
+            teacher = serializer.create(validated_data)
+            return Response({"status":teacher}, status=status.HTTP_201_CREATED)
+
 
 
 class RegisterView(GenericViewSet):
-    permission_classes = (AllowAny,)
+    permission_classes = (IsAuthenticated,)
     serializer_class = RegistrationSerializer
     queryset = User.objects.all()
     lookup_field = 'pk'
