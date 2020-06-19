@@ -1,6 +1,6 @@
 import graphene
 from graphene_django.types import DjangoObjectType, ObjectType
-from school.models import School
+from school.models import School, Teacher
 
 '''********************************** GraphQL Types **********************************'''
 
@@ -8,6 +8,9 @@ class SchoolType(DjangoObjectType):
     class Meta:
         model = School
 
+class TeacherType(DjangoObjectType):
+    class Meta:
+        model = Teacher
 
 '''********************************** Mutation **********************************'''
 
@@ -88,8 +91,8 @@ class Mutation(graphene.ObjectType):
 '''************************************* Query ***************************************'''
 
 class Query(ObjectType):
-    school = graphene.Field( SchoolType, id=graphene.UUID() )
-    schools = graphene.List( SchoolType )
+    school = graphene.Field(SchoolType, id=graphene.UUID())
+    schools = graphene.List(SchoolType)
 
     def resolve_school(self, info, **kwargs):
         id = kwargs.get( "id" )
@@ -98,4 +101,12 @@ class Query(ObjectType):
         return None
 
     def resolve_schools(self, info, **kwargs):
+        user = info.context.user
+        print( f"users: {user}" )
         return School.objects.all()
+
+
+    teachers = graphene.List(TeacherType)
+
+    def resolve_teachers(self, info, **kwargs):
+        return Teacher.objects.all()
