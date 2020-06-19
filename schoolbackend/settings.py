@@ -28,6 +28,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'rest_framework',
     'school',
+    'graphene_django'
 ]
 
 AUTH_USER_MODEL = 'school.User'
@@ -40,6 +41,11 @@ REST_FRAMEWORK = {
     # 'DEFAULT_PERMISSION_CLASSES': (
     #     'rest_framework.permissions.IsAuthenticated',
     # )
+}
+
+GRAPHENE = {
+    'SCHEMA': 'schoolbackend.schema.schema',
+    # 'MIDDLEWARE': ['graphql_jwt.middleware.JSONWebTokenMiddleware',]
 }
 
 MIDDLEWARE = [

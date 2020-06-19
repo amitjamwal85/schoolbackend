@@ -5,12 +5,14 @@ from rest_framework.permissions import AllowAny
 from rest_framework.documentation import include_docs_urls
 from rest_framework_simplejwt import views as jwt_views
 from school.views import SchoolView, RegisterView, StudentView, TeacherView
+from graphene_django.views import GraphQLView
+from django.views.decorators.csrf import csrf_exempt
 
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('docs/', include_docs_urls(title='School Backend', permission_classes=[AllowAny])),
-
+    path( "graphql", csrf_exempt(GraphQLView.as_view(graphiql=True))),
     path('api/token/', jwt_views.TokenObtainPairView.as_view(), name='token_obtain_pair'),
     path('api/token/refresh/', jwt_views.TokenRefreshView.as_view(), name='token_refresh'),
 ]
