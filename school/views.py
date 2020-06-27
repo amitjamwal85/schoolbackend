@@ -10,6 +10,7 @@ from six import text_type
 
 from school.models import School, Student, Teacher
 from school.serializers import PostSerializer, RegistrationSerializer, StudentSerializer, TeacherSerializer
+from schoolbackend.utils import SchoolPermission
 
 User = get_user_model()
 
@@ -19,14 +20,14 @@ class CustomSetPagination(PageNumberPagination):
 
 
 class SchoolView(viewsets.ModelViewSet):
-    permission_classes = (IsAuthenticated, )
+    permission_classes = (IsAuthenticated, SchoolPermission,)
     serializer_class = PostSerializer
     queryset = School.objects.all()
     lookup_field = "pk"
 
 
 class StudentView(viewsets.ModelViewSet):
-    permission_classes = (IsAuthenticated, )
+    permission_classes = (IsAuthenticated, SchoolPermission)
     serializer_class = StudentSerializer
     queryset = Student.objects.all()
     lookup_field = "pk"
@@ -41,7 +42,7 @@ class StudentView(viewsets.ModelViewSet):
 
 
 class TeacherView(viewsets.ModelViewSet):
-    permission_classes = (IsAuthenticated, )
+    permission_classes = (IsAuthenticated, SchoolPermission)
     serializer_class = TeacherSerializer
     queryset = Teacher.objects.all()
     lookup_field = "pk"
@@ -57,7 +58,7 @@ class TeacherView(viewsets.ModelViewSet):
 
 
 class RegisterView(GenericViewSet):
-    permission_classes = (IsAuthenticated,)
+    permission_classes = (AllowAny,)
     serializer_class = RegistrationSerializer
     queryset = User.objects.all()
     lookup_field = 'pk'
